@@ -51,6 +51,7 @@ def parse(input_filename, output_filename):
     output.write("START TRANSACTION;\n")
     output.write("SET standard_conforming_strings=off;\n")
     output.write("SET escape_string_warning=off;\n")
+    output.write("SET client_encoding = 'UTF8';\n")
     output.write("SET CONSTRAINTS ALL DEFERRED;\n\n")
 
     for i, line in enumerate(input_fh):
@@ -116,11 +117,11 @@ def parse(input_filename, output_filename):
                     type = "text"
                 elif type.startswith("varchar("):
                     size = int(type.split("(")[1].rstrip(")"))
-                    type = "varchar(%s)" % (size * 2)
+                    type = "character varying(%s)" % size
                 elif type.startswith("smallint("):
                     type = "int2"
                 elif type == "datetime":
-                    type = "timestamp with time zone"
+                    type = "timestamp without time zone"
                 elif type == "double":
                     type = "double precision"
                 if final_type:
